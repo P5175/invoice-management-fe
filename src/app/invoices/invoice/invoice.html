@@ -1,0 +1,58 @@
+<div class="invoice-container">
+
+  <!-- Header & Create Button -->
+  <div class="invoice-header">
+    <h2>Invoice Management</h2>
+    <p-button label="Create Invoice" icon="pi pi-plus" (onClick)="openCreateDialog()"></p-button>
+  </div>
+
+  <div class="p-mb-3">
+    <input type="text" pInputText placeholder="Global Search" [(ngModel)]="globalFilter" (input)="onSearch()">
+  </div>
+
+  <!-- Invoice Table -->
+  <p-table [value]="invoices" [paginator]="true" [rows]="5" [totalRecords]="totalRecords" responsiveLayout="scroll"
+    (onLazyLoad)="loadInvoicesLazy($event)" [loading]="loading" [lazy]="true">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Invoice # </th>
+        <th pSortableColumn="invoiceDate">Date <p-sortIcon field="invoiceDate"></p-sortIcon></th>
+        <th>From Name</th>
+        <th>To Name</th>
+        <th>Total Amount</th>
+        <th>Actions</th>
+      </tr>
+
+      <tr>
+        <th>
+          <input type="text" pInputText placeholder="Search Invoice #" [(ngModel)]="filters.invoiceNumber"
+            (input)="onSearch()">
+        </th>
+        <th></th>
+        <th>
+          <input type="text" pInputText placeholder="Search From" [(ngModel)]="filters.fromName" (input)="onSearch()">
+        </th>
+        <th>
+          <input type="text" pInputText placeholder="Search To" [(ngModel)]="filters.toName" (input)="onSearch()">
+        </th>
+        <th></th>
+        <th></th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-inv>
+      <tr>
+        <td>{{ inv.invoiceNumber }}</td>
+        <td>{{ inv.invoiceDate | date:'shortDate' }}</td>
+        <td>{{ inv.fromName }}</td>
+        <td>{{ inv.toName }}</td>
+        <td>{{ inv.totalAmount }}</td>
+        <td>
+          <p-button icon="pi pi-eye" (onClick)="openViewDialog(inv)"></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+</div>

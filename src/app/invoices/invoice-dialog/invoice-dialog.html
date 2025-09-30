@@ -1,0 +1,93 @@
+<div class="invoice-dialog" [formGroup]="invoiceForm">
+  <div class="form-grid">
+    <div class="field-wrapper">
+      <label for="fromName">From Name</label>
+      <input id="fromName" pInputText formControlName="fromName" [disabled]="mode==='view'">
+      <small class="error" *ngIf="fromName?.invalid && (fromName?.touched || fromName?.dirty)">
+        From Name is required.
+      </small>
+    </div>
+
+    <div class="field-wrapper">
+      <label for="fromAddress">From Address</label>
+      <input id="fromAddress" pInputText formControlName="fromAddress" [disabled]="mode==='view'">
+      <small class="error" *ngIf="fromAddress?.invalid && (fromAddress?.touched || fromAddress?.dirty)">
+        From Address is required.
+      </small>
+    </div>
+
+    <div class="field-wrapper">
+      <label for="toName">To Name</label>
+      <input id="toName" pInputText formControlName="toName" [disabled]="mode==='view'">
+      <small class="error" *ngIf="toName?.invalid && (toName?.touched || toName?.dirty)">
+        To Name is required.
+      </small>
+    </div>
+
+    <div class="field-wrapper">
+      <label for="toAddress">To Address</label>
+      <input id="toAddress" pInputText formControlName="toAddress" [disabled]="mode==='view'">
+      <small class="error" *ngIf="toAddress?.invalid && (toAddress?.touched || toAddress?.dirty)">
+        To Address is required.
+      </small>
+    </div>
+
+    <div class="field-wrapper">
+      <label for="invoiceDate">Invoice Date</label>
+      <input id="invoiceDate" type="date" pInputText formControlName="invoiceDate" [disabled]="mode==='view'">
+      <small class="error" *ngIf="invoiceDate?.invalid && (invoiceDate?.touched || invoiceDate?.dirty)">
+        Invoice Date is required.
+      </small>
+    </div>
+  </div>
+
+  <h4 class="items-title">Items</h4>
+  <div class="items-container" formArrayName="items">
+    <div class="item-row" *ngFor="let item of items.controls; let i = index" [formGroupName]="i">
+      <div class="item-col item-name">
+        <div class="input-wrapper">
+          <input pInputText placeholder="Item Name" formControlName="itemName" [disabled]="mode==='view'">
+          <small class="error" *ngIf="item.get('itemName')?.invalid && (item.get('itemName')?.touched || item.get('itemName')?.dirty)">
+            Item Name is required.
+          </small>
+        </div>
+      </div>
+      
+
+      <div class="item-col item-qty">
+        <input type="number" pInputText placeholder="Qty" formControlName="quantity" [disabled]="mode==='view'">
+        <small class="error" *ngIf="item.get('quantity')?.invalid && (item.get('quantity')?.touched || item.get('quantity')?.dirty)">
+          Quantity must be at least 1.
+        </small>
+      </div>
+
+      <div class="item-col item-rate">
+        <input type="number" pInputText placeholder="Rate" formControlName="rate" [disabled]="mode==='view'">
+        <small class="error" *ngIf="item.get('rate')?.invalid && (item.get('rate')?.touched || item.get('rate')?.dirty)">
+          Rate must be >= 0.
+        </small>
+      </div>
+
+      <div class="item-col item-total">
+        <input pInputText placeholder="Total" formControlName="total" [disabled]="true">
+      </div>
+
+      <div class="item-col item-action" *ngIf="mode === 'create'">
+        <button pButton type="button" icon="pi pi-times" class="p-button-danger" (click)="removeItem(i)"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="add-item" *ngIf="mode === 'create'">
+    <button pButton type="button" label="Add Item" icon="pi pi-plus" (click)="addItem()"></button>
+  </div>
+
+  <div class="total-row">
+    <strong>Total Amount: {{ invoiceForm.get('totalAmount')?.value }}</strong>
+  </div>
+
+  <div class="dialog-actions">
+    <button pButton label="Close" class="p-button-secondary" (click)="close()"></button>
+    <button *ngIf="mode === 'create'" pButton label="Save" class="p-button-success" (click)="save()"></button>
+  </div>
+</div>

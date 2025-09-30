@@ -1,0 +1,129 @@
+.invoice-dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 520px;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.25rem;
+}
+
+.input-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.input-wrapper input.ng-invalid.ng-touched {
+  border: 1px solid red !important;
+}
+
+small.error {
+  color: red;
+  font-size: 0.7rem;
+  margin-top: 0.2rem;
+}
+
+
+/* Form grid inside dialog */
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem 1rem;
+}
+
+.field-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.field-wrapper label {
+  width: 120px;
+  min-width: 120px;
+  font-weight: 600;
+}
+
+.field-wrapper input {
+  flex: 1;
+  box-sizing: border-box;
+  padding: 0.45rem;
+  border-radius: 6px;
+  border: 1px solid #dcdcdc;
+}
+
+/* Items section */
+.items-title {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.items-container {
+  border-top: 1px solid #eee;
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.item-col {
+  box-sizing: border-box;
+}
+
+.item-name { flex: 2; }
+.item-qty { flex: 0.9; }
+.item-rate { flex: 1; }
+.item-total { flex: 1; }
+.item-action { flex: 0.5; }
+
+.item-row input {
+  width: 100%;
+  padding: 0.4rem;
+  border-radius: 6px;
+  border: 1px solid #e3e3e3;
+}
+
+/* Add item button */
+.add-item {
+  margin-top: 0.25rem;
+}
+
+/* Total amount */
+.total-row {
+  text-align: right;
+  font-weight: 700;
+  margin-top: 0.5rem;
+}
+
+/* Dialog footer buttons */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+/* Responsive styles */
+@media (max-width: 640px) {
+  .form-grid { grid-template-columns: 1fr; }
+  .field-wrapper label {
+    width: auto;
+    min-width: 0;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+  .item-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .item-action {
+    display: flex;
+    justify-content: flex-end;
+  }
+}
