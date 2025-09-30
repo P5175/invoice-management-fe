@@ -6,9 +6,9 @@ import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { TableModule } from 'primeng/table';
 import { Invoice } from '../../models/invoice.model';
-import { of, delay } from 'rxjs';
 import { DialogService } from 'primeng/dynamicdialog';
 import { InvoiceDialog } from '../invoice-dialog/invoice-dialog';
+import { InvoiceService } from '../../services/invoice.service';
 
 @Component({
   selector: 'app-invoice',
@@ -43,11 +43,13 @@ export class InvoiceComponent {
   ];
 
 
-  constructor(private fb: FormBuilder, private dialogService: DialogService) {
+  constructor(private fb: FormBuilder, private dialogService: DialogService,
+    private invoiceService: InvoiceService) {
   }
 
   ngOnInit() {
-    this.loadInvoices();
+    // this.loadInvoices();
+    this.loadInvoicesLazy({ first: 0, rows: 5, sortField: 'invoiceDate', sortOrder: 1 });
   }
 
   loadInvoices() {
@@ -93,59 +95,63 @@ export class InvoiceComponent {
     });
   }
 
+  // getInvoices(params: any) {
+  //   let filtered = [...this.ALL_INVOICES];
+
+  //   // --- Global filter ---
+  //   if (params.globalFilter) {
+  //     const gf = params.globalFilter.toLowerCase();
+  //     filtered = filtered.filter(inv =>
+  //       inv.invoiceNumber.toLowerCase().includes(gf) ||
+  //       inv.fromName.toLowerCase().includes(gf) ||
+  //       inv.toName.toLowerCase().includes(gf)
+  //     );
+  //   }
+
+  //   // --- Field-wise filters ---
+  //   if (params.filters) {
+  //     for (const key in params.filters) {
+  //       const val = params.filters[key]?.toLowerCase();
+  //       if (val) {
+  //         filtered = filtered.filter(inv => {
+  //           const field = key as keyof Invoice;
+  //           const fieldValue = inv[field];
+  //           return typeof fieldValue === 'string' && fieldValue.toLowerCase().includes(val);
+  //         });
+  //       }
+  //     }
+  //   }
+
+  //   // --- Sorting ---
+  //   if (params.sortField) {
+  //     const sortField = params.sortField as keyof Invoice;
+  //     filtered.sort((a, b) => {
+  //       let aValue = a[sortField];
+  //       let bValue = b[sortField];
+
+  //       if (aValue instanceof Date) aValue = aValue.getTime();
+  //       if (bValue instanceof Date) bValue = bValue.getTime();
+
+  //       if (params.sortOrder === 'asc' || params.sortOrder === 1) {
+  //         return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
+  //       } else {
+  //         return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
+  //       }
+  //     });
+  //   }
+
+  //   // --- Pagination ---
+  //   const totalRecords = filtered.length;
+  //   const start = ((params.page ?? 1) - 1) * (params.limit ?? 5);
+  //   const end = start + (params.limit ?? 5);
+  //   const paged = filtered.slice(start, end);
+
+  //   // Return observable to simulate HTTP call with delay
+  //   return of({ data: paged, totalRecords }).pipe(delay(300)); // 300ms delay
+  // }
+
   getInvoices(params: any) {
-    let filtered = [...this.ALL_INVOICES];
-
-    // --- Global filter ---
-    if (params.globalFilter) {
-      const gf = params.globalFilter.toLowerCase();
-      filtered = filtered.filter(inv =>
-        inv.invoiceNumber.toLowerCase().includes(gf) ||
-        inv.fromName.toLowerCase().includes(gf) ||
-        inv.toName.toLowerCase().includes(gf)
-      );
-    }
-
-    // --- Field-wise filters ---
-    if (params.filters) {
-      for (const key in params.filters) {
-        const val = params.filters[key]?.toLowerCase();
-        if (val) {
-          filtered = filtered.filter(inv => {
-            const field = key as keyof Invoice;
-            const fieldValue = inv[field];
-            return typeof fieldValue === 'string' && fieldValue.toLowerCase().includes(val);
-          });
-        }
-      }
-    }
-
-    // --- Sorting ---
-    if (params.sortField) {
-      const sortField = params.sortField as keyof Invoice;
-      filtered.sort((a, b) => {
-        let aValue = a[sortField];
-        let bValue = b[sortField];
-
-        if (aValue instanceof Date) aValue = aValue.getTime();
-        if (bValue instanceof Date) bValue = bValue.getTime();
-
-        if (params.sortOrder === 'asc' || params.sortOrder === 1) {
-          return aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-        } else {
-          return aValue < bValue ? 1 : aValue > bValue ? -1 : 0;
-        }
-      });
-    }
-
-    // --- Pagination ---
-    const totalRecords = filtered.length;
-    const start = ((params.page ?? 1) - 1) * (params.limit ?? 5);
-    const end = start + (params.limit ?? 5);
-    const paged = filtered.slice(start, end);
-
-    // Return observable to simulate HTTP call with delay
-    return of({ data: paged, totalRecords }).pipe(delay(300)); // 300ms delay
+    return this.invoiceService.fetchInvoices(params);  // returns observable from backend
   }
 
   onSearch() {

@@ -5,6 +5,7 @@ import { ButtonModule } from "primeng/button";
 import { DynamicDialogRef, DynamicDialogConfig } from "primeng/dynamicdialog";
 import { InputTextModule } from "primeng/inputtext";
 import { Invoice } from "../../models/invoice.model";
+import { InvoiceService } from "../../services/invoice.service";
 
 
 @Component({
@@ -28,7 +29,8 @@ export class InvoiceDialog {
   constructor(
     private fb: FormBuilder,
     private ref: DynamicDialogRef,
-    private config: DynamicDialogConfig
+    private config: DynamicDialogConfig,
+    private invoiceService: InvoiceService
   ) {
     this.invoiceForm = this.fb.group({
       fromName: ['', Validators.required],
@@ -105,12 +107,32 @@ export class InvoiceDialog {
     this.invoiceForm.get('totalAmount')?.setValue(total);
   }
 
+  // save() {
+  //   if (this.invoiceForm.valid) {
+  //     this.ref.close({ saved: true, data: this.invoiceForm.value });
+  //   }else {
+  //     this.invoiceForm.markAllAsTouched(); 
+  //   }
+  // }
   save() {
-    if (this.invoiceForm.valid) {
-      this.ref.close({ saved: true, data: this.invoiceForm.value });
-    }else {
-      this.invoiceForm.markAllAsTouched(); 
+    if (this.invoiceForm.invalid) {
+      this.invoiceForm.markAllAsTouched();
+      return;
     }
+  
+    const invoiceData = this.invoiceForm.getRawValue(); // includes disabled fields like total
+  
+    // Call backend API
+    this.invoiceService.saveInvoice(invoiceData).subscribe({
+      next: (res) => {
+        // Close dialog and pass saved data back
+        this.ref.close({ saved: true, data: res });
+      },
+      error: (err) => {
+        console.error('Error saving invoice:', err);
+        alert('Failed to save invoice. Please try again.');
+      }
+    });
   }
 
   close() {
