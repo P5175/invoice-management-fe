@@ -11,8 +11,8 @@
   </div>
 
   <!-- Invoice Table -->
-  <p-table [value]="invoices" [paginator]="true" [rows]="5" [totalRecords]="totalRecords" responsiveLayout="scroll"
-    (onLazyLoad)="loadInvoicesLazy($event)" [loading]="loading" [lazy]="true">
+  <p-table [value]="(invoices$ | async) ?? []" [paginator]="true" [rows]="5" [totalRecords]="totalRecords"
+    responsiveLayout="scroll" (onLazyLoad)="loadInvoicesLazy($event)" [loading]="loading" [lazy]="true">
 
     <ng-template pTemplate="header">
       <tr>

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DialogModule } from 'primeng/dialog';
 import { DialogService } from 'primeng/dynamicdialog';
-import { finalize } from 'rxjs';
+import { Observable, finalize, map, tap } from 'rxjs';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { InputTextModule } from 'primeng/inputtext';
 import { Invoice } from '../../models/invoice.model';
@@ -33,7 +33,7 @@ export class InvoiceComponent {
   };
 
   loading: boolean = false;
-  invoices: Invoice[] = [];
+  invoices$!: Observable<Invoice[]>;
 
   constructor(private fb: FormBuilder, private dialogService: DialogService,
     private invoiceService: InvoiceService) {
@@ -52,21 +52,11 @@ export class InvoiceComponent {
       filters: this.filters
     };
 
-    this.getInvoices(params)
-      .pipe(
-        finalize(() => {
-          this.loading = false;
-        })
-      )
-      .subscribe({
-        next: res => {
-          this.invoices = res.data;
-          this.totalRecords = res.total;
-        },
-        error: err => {
-          console.error('Error fetching invoices:', err);
-        }
-      });
+    this.invoices$ = this.invoiceService.fetchInvoices(params).pipe(
+      finalize(() => (this.loading = false)),
+      tap(res => this.totalRecords = res.total),
+      map(res => res.data)
+    );
   }
 
   getInvoices(params: any) {
