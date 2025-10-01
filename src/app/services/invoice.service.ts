@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class InvoiceService {
-  private baseUrl = 'https://invoicemanagementbe-odyt--3000--96435430.local-credentialless.webcontainer.io/invoice'; // NestJS backend URL
+  private baseUrl = `${environment.apiUrl}/invoice`; // NestJS backend URL
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // Save invoice
   saveInvoice(invoice: any): Observable<any> {
