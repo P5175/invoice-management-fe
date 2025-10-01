@@ -107,21 +107,12 @@ export class InvoiceDialog {
     this.invoiceForm.get('totalAmount')?.setValue(total);
   }
 
-  // save() {
-  //   if (this.invoiceForm.valid) {
-  //     this.ref.close({ saved: true, data: this.invoiceForm.value });
-  //   }else {
-  //     this.invoiceForm.markAllAsTouched(); 
-  //   }
-  // }
   save() {
     if (this.invoiceForm.invalid) {
       this.invoiceForm.markAllAsTouched();
       return;
     }
-  
-    const invoiceData = this.invoiceForm.getRawValue(); // includes disabled fields like total
-  
+    const invoiceData = this.invoiceForm.getRawValue();
     // Call backend API
     this.invoiceService.saveInvoice(invoiceData).subscribe({
       next: (res) => {

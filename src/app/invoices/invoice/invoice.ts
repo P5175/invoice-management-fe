@@ -1,14 +1,15 @@
+import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { InputTextModule } from 'primeng/inputtext';
-import { TableModule } from 'primeng/table';
-import { Invoice } from '../../models/invoice.model';
 import { DialogService } from 'primeng/dynamicdialog';
+import { finalize } from 'rxjs';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
+import { Invoice } from '../../models/invoice.model';
 import { InvoiceDialog } from '../invoice-dialog/invoice-dialog';
 import { InvoiceService } from '../../services/invoice.service';
+import { TableModule } from 'primeng/table';
 
 @Component({
   selector: 'app-invoice',
@@ -24,7 +25,6 @@ export class InvoiceComponent {
 
   lazyLoadEvent: any; // store last lazy load event
   totalRecords: number = 0;
-  loading: boolean = false;
   globalFilter: string = '';
   filters: any = {
     invoiceNumber: '',
@@ -32,14 +32,11 @@ export class InvoiceComponent {
     toName: ''
   };
 
+  loading: boolean = false;
   invoices: Invoice[] = [];
 
   constructor(private fb: FormBuilder, private dialogService: DialogService,
     private invoiceService: InvoiceService) {
-  }
-
-  ngOnInit() {
-    this.loadInvoicesLazy({ first: 0, rows: 5, sortField: 'invoiceDate', sortOrder: 1 });
   }
 
   loadInvoicesLazy(event: any) {
@@ -55,11 +52,21 @@ export class InvoiceComponent {
       filters: this.filters
     };
 
-    this.getInvoices(params).subscribe(res => {
-      this.invoices = res.data;
-      this.totalRecords = res.total;
-      this.loading = false;
-    });
+    this.getInvoices(params)
+      .pipe(
+        finalize(() => {
+          this.loading = false;
+        })
+      )
+      .subscribe({
+        next: res => {
+          this.invoices = res.data;
+          this.totalRecords = res.total;
+        },
+        error: err => {
+          console.error('Error fetching invoices:', err);
+        }
+      });
   }
 
   getInvoices(params: any) {

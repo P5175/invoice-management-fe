@@ -47,23 +47,26 @@
       <div class="item-col item-name">
         <div class="input-wrapper">
           <input pInputText placeholder="Item Name" formControlName="itemName" [disabled]="mode==='view'">
-          <small class="error" *ngIf="item.get('itemName')?.invalid && (item.get('itemName')?.touched || item.get('itemName')?.dirty)">
+          <small class="error"
+            *ngIf="item.get('itemName')?.invalid && (item.get('itemName')?.touched || item.get('itemName')?.dirty)">
             Item Name is required.
           </small>
         </div>
       </div>
-      
+
 
       <div class="item-col item-qty">
         <input type="number" pInputText placeholder="Qty" formControlName="quantity" [disabled]="mode==='view'">
-        <small class="error" *ngIf="item.get('quantity')?.invalid && (item.get('quantity')?.touched || item.get('quantity')?.dirty)">
+        <small class="error"
+          *ngIf="item.get('quantity')?.invalid && (item.get('quantity')?.touched || item.get('quantity')?.dirty)">
           Quantity must be at least 1.
         </small>
       </div>
 
       <div class="item-col item-rate">
         <input type="number" pInputText placeholder="Rate" formControlName="rate" [disabled]="mode==='view'">
-        <small class="error" *ngIf="item.get('rate')?.invalid && (item.get('rate')?.touched || item.get('rate')?.dirty)">
+        <small class="error"
+          *ngIf="item.get('rate')?.invalid && (item.get('rate')?.touched || item.get('rate')?.dirty)">
           Rate must be >= 0.
         </small>
       </div>

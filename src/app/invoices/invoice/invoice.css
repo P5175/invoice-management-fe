@@ -13,51 +13,10 @@ p-table {
   margin-top: 1rem;
 }
 
-/* Items grid */
-.items-container {
-  border-top: 1px solid #ccc;
-  padding-top: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.item-row {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.item-row input {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.item-row .p-col-4 {
-  flex: 2; /* Item Name wider */
-}
-
-.item-row .p-col-2 {
-  flex: 1; /* Qty / Rate / Total smaller */
-}
-
-.item-row .p-col-2:last-child {
-  flex: 0.5; /* Delete button smaller */
-}
-
 @media screen and (max-width: 640px) {
   .invoice-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
-  }
-  .item-row {
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .item-row .p-col-2,
-  .item-row .p-col-4 {
-    flex: 1;
   }
 }
